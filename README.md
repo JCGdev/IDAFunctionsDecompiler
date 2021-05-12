@@ -11,7 +11,7 @@ An IDAPython script to decompile all the functions of a binary and dump the pseu
 
 ## General info
 
->- Get the decompiled pseudocode of every function in a binary, using IDA 7 and it's API
+>- Get the decompiled pseudocode of every function in a binary, using IDA 7.5 and it's API
 
 >- IDAPython and Hexrays decompiler needed! 
 
@@ -19,19 +19,21 @@ An IDAPython script to decompile all the functions of a binary and dump the pseu
 
 gofileUploader.py hashes
 
->Sha1 --> `9B5A7EE106604321FD56886868A5B130176EA482`
+>Sha1 --> `B5A7EE106604321FD56886868A5B130176EA482`
 
 >Sha256 --> `93D068486B767EB7CEDE76B14E8E91679C3628DDF9B20A19B44949546D5D5EC1`
 
 ## Setup
 
-*** Change output path ***
+***Change output path***
 
 `Edit "outputPath" variable from the script, and specify the folder where pseudocode will be stored`
 
 Example:
 
 `outputPath = "C:\\Users\Juanjo\\Desktop\\test"`
+
+![alt text](example.mp4)
 
 ## Docs
 
