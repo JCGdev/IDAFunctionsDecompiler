@@ -33,7 +33,7 @@ Example:
 
 `outputPath = "C:\\Users\Juanjo\\Desktop\\test"`
 
-![alt text](example.mp4)
+![example video](example.mp4)
 
 ## Docs
 
