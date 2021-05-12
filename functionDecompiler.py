@@ -56,7 +56,7 @@ def decompileFunctions(functionList):
 			with open(os.path.join(outputPath, parsedFuncName), "a") as f:
 				f.write("// " + funcName + "\n \n")
 				for lineObj in pseudoCodeObj:
-					f.write(ida_lines.tag_remove(lineObj.line))
+					f.write(ida_lines.tag_remove(lineObj.line) + "/n")
 		except:
 			errorLogger(f"[%s] --> FAILED DECOMPILING \n" % funcName)
 
