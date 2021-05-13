@@ -13,15 +13,17 @@ An IDAPython script to decompile all the functions of a binary and dump the pseu
 
 >- Get the decompiled pseudocode of every function in a binary, using IDA 7.5 and it's API
 
->- IDAPython and Hexrays decompiler needed! 
+>- IDAPython plugin and Hexrays decompiler needed! 
 
 ## Checksums
 
 gofileUploader.py hashes
 
->Sha1 --> `B5A7EE106604321FD56886868A5B130176EA482`
+>MD5 --> `0c9c5cac57f930e562ce8a053a3237bb`
 
->Sha256 --> `93D068486B767EB7CEDE76B14E8E91679C3628DDF9B20A19B44949546D5D5EC1`
+>Sha1 --> `39d2f3abba612c2e1f09957adba1dcb25c72fd29`
+
+>Sha256 --> `22c64f0f9295f8cd32ed4dfd0ebdb7c7902c341afbc1e60f3bd6097184f9c56b`
 
 ## Setup
 
