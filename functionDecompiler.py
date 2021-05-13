@@ -29,7 +29,7 @@ def initHexraysPlugin():
 		errorLogger(f"[Error] hexrays (version %s) failed to init \n" % ida_hexrays.get_hexrays_version())
 		return idaapi.PLUGIN_SKIP
 	else:	
-		ida_kernwin.msg(f"Hex-rays version %s has been detected \n" % ida_hexrays.get_hexrays_version())
+		IDAConsolePrint(f"[*] Hex-rays version %s has been detected \n" % ida_hexrays.get_hexrays_version())
 
 def listFunctions():
 	functionList=[]
@@ -47,21 +47,25 @@ def decompileFunctions(functionList):
 		parsedFuncName = parseIlegalChars(funcName)
 
 		try:
-			
+			IDAConsolePrint(f"[*] Process started with --> {funcName} \n")
 			decompiledFunc = ida_hexrays.decompile(func);
-			pseudoCodeObj = decompiledFunc.get_pseudocode()
-
-			ida_kernwin.msg(f"Process started with --> {funcName} \n")
-
-			with open(os.path.join(outputPath, parsedFuncName), "a") as f:
-				f.write("// " + funcName + "\n \n")
-				for lineObj in pseudoCodeObj:
-					f.write(ida_lines.tag_remove(lineObj.line) + "/n")
+			pseudoCodeOBJ = decompiledFunc.get_pseudocode()
+			
+			dumpPseudocode(pseudoCodeOBJ, parsedFuncName)
 		except:
 			errorLogger(f"[%s] --> FAILED DECOMPILING \n" % funcName)
 
-def errorLogger(message):
+def dumpPseudocode(pseudoCodeOBJ, funcName):
+	with open(os.path.join(outputPath, funcName), "a") as f:
+		f.write(f"// {funcName} \n \n")
+		for lineOBJ in pseudoCodeOBJ:
+			f.write(ida_lines.tag_remove(lineOBJ.line) + "\n")
+
+def IDAConsolePrint(message):
 	ida_kernwin.msg(message)
+
+def errorLogger(message):
+	IDAConsolePrint(message)
 	with open(os.path.join(outputPath, "0 - ERROR_LOG.txt"), "a") as f:
 		f.write(message + "\n")
 
