@@ -35,7 +35,7 @@ Example:
 
 `outputPath = "C:\\Users\Juanjo\\Desktop\\test"`
 
-![example video](example.mp4)
+![](example.gif)
 
 ## Docs
 
