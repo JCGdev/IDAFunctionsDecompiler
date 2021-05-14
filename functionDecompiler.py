@@ -15,7 +15,6 @@ import os
 import shutil
 
 outputPath = "C:\\Users\Juanjo\\Desktop\\test"	# PATH MUST BE EDITED
-ea = ida_ida.inf_get_min_ea()
 
 def checkPath():
 	if not os.path.exists(outputPath):
@@ -34,7 +33,7 @@ def initHexraysPlugin():
 def listFunctions():
 	functionList=[]
 
-	for func in Functions(idc.get_segm_start(ea), idc.get_segm_end(ea)):
+	for func in idautils.Functions():
     		functionList.append(func)
 
 	return functionList
