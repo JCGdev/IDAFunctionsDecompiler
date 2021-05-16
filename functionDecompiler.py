@@ -40,19 +40,26 @@ def listFunctions():
 
 def decompileFunctions(functionList):
 	
+	functionCounter = 1
+	IDAConsolePrint("[!] Process started [!] \n")
+
 	for func in listFunctions():
 		
 		funcName = idc.get_func_name(func)
 		parsedFuncName = parseIlegalChars(funcName)
-
+	
 		try:
-			IDAConsolePrint(f"[*] Process started with --> {funcName} \n")
+			IDAConsolePrint(f"[{functionCounter}] Decompiling --> {funcName} \n")
 			decompiledFunc = ida_hexrays.decompile(func);
 			pseudoCodeOBJ = decompiledFunc.get_pseudocode()
 			
-			dumpPseudocode(pseudoCodeOBJ, parsedFuncName)
+			dumpPseudocode(pseudoCodeOBJ, funcName)
+			functionCounter += 1
+
 		except:
-			errorLogger(f"[%s] --> FAILED DECOMPILING \n" % funcName)
+			errorLogger(f"[{funcName}] --> FAILED DECOMPILING \n")
+
+	IDAConsolePrint(f"[!] Successfully decompiled %s functions! [!]" % str(functionCounter - 1))
 
 def dumpPseudocode(pseudoCodeOBJ, funcName):
 	with open(os.path.join(outputPath, funcName), "a") as f:
