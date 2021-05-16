@@ -57,12 +57,13 @@ def decompileFunctions(functionList):
 			functionCounter += 1
 
 		except:
-			errorLogger(f"[{funcName}] --> FAILED DECOMPILING \n")
+			exceptionLogger(funcName)
+			functionCounter -= 1			
 
 	IDAConsolePrint(f"[!] Successfully decompiled %s functions! [!]" % str(functionCounter - 1))
 
 def dumpPseudocode(pseudoCodeOBJ, funcName):
-	with open(os.path.join(outputPath, funcName), "a") as f:
+	with open(os.path.join(outputPath, parseIlegalChars(funcName)), "a") as f:
 		f.write(f"// {funcName} \n \n")
 		for lineOBJ in pseudoCodeOBJ:
 			f.write(ida_lines.tag_remove(lineOBJ.line) + "\n")
@@ -70,10 +71,18 @@ def dumpPseudocode(pseudoCodeOBJ, funcName):
 def IDAConsolePrint(message):
 	ida_kernwin.msg(message)
 
+def exceptionLogger(funcName):
+	IDAConsolePrint(f"[%s] --> FAILED DECOMPILING \n" % funcName)
+	with open(os.path.join(outputPath, "0 - ERROR_LOG.txt"), "a") as f:
+		f.write(f"[%s] --> FAILED DECOMPILING \n" % funcName)
+		f.write(f"[Parsed func name]: %s \n" % parseIlegalChars(funcName))
+		f.write(f"[Absolute path]: %s \n" % os.path.join(outputPath, parseIlegalChars(funcName)))
+		f.write(f"[Exception info]: %s \n \n" % str(sys.exc_info()))
+
 def errorLogger(message):
 	IDAConsolePrint(message)
 	with open(os.path.join(outputPath, "0 - ERROR_LOG.txt"), "a") as f:
-		f.write(message + "\n")
+		f.write(message + "\n")	
 
 def parseIlegalChars(stringToParse):
 	ilegalChars = ("/", "\\", ":", "<", ">", "|", "?", ",", ".", "&")
