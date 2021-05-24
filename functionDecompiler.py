@@ -42,11 +42,12 @@ def decompileFunctions(functionList):
 	
 	functionCounter = 1
 	IDAConsolePrint("[!] Process started [!] \n")
+		
 
 	for func in listFunctions():
 		
 		funcName = idc.get_func_name(func)
-		parsedFuncName = parseIlegalChars(funcName)
+		appendToHashmap(funcName, parseIlegalChars(funcName))
 	
 		try:
 			IDAConsolePrint(f"[{functionCounter}] Decompiling --> {funcName} \n")
@@ -92,6 +93,14 @@ def parseIlegalChars(stringToParse):
 		if char in stringToParse:
 			parsedString = stringToParse.replace(char, "-")
 	return parsedString
+
+
+def appendToHashmap(funcName, parsedFuncName):
+	try:
+		with open(os.path.join(outputPath, "1 - nameMap.txt"), "a") as f:
+			f.write(f"{funcName} : {parsedFuncName} \n")
+	except:
+		exceptionLogger(funcName)
 
 def main():
 
