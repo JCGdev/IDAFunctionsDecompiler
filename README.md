@@ -19,11 +19,11 @@ An IDAPython script to decompile all the functions of a binary and dump the pseu
 
 gofileUploader.py hashes
 
->MD5 --> `4c8aedeac86ab5c903930991de7205ad`
+>MD5 --> `ed922283e746baacd5c7f3de8d2c91fc`
 
->Sha1 --> `4ca6176c982fb5fb3e0788844a888072c33f722b`
+>Sha1 --> `10d50c80139f71cde480b4c550914d1b82c16906`
 
->Sha256 --> `853e2b5e108c00cb9eea040c85fd50147630cffdcb311566919b60582029341f`
+>Sha256 --> `6cbe37b0b870f867fe022cf4d76b398b23dd0bc10a467c4c8e3a4fcc1e3a9049`
 
 ## Setup
 
