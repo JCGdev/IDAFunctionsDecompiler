@@ -28,36 +28,40 @@ if outputPath == "":
 
 
 def main() -> None:
-
 	checkOutputPath()
 	initHexraysPlugin()	
 
-	functionCounter: int = 1
 	IDAConsolePrint("[!] Starting... [!] \n")
 
+	global functionsPath
+	realAndSanitizedFunctionNameMapping: dict = {}
+	functionCounter: int = 1
+
 	for func in idautils.Functions():
-		global functionsPath		
 		funcName: str = idc.get_func_name(func)
+		sanitizedFuncName = parseIlegalChars(funcName)
 		
 		# Filenames must be sanitized. Because of that, this mapping may help
-		# to identify the real function name.
-		mapFunctionNameWithParsedName(funcName, parseIlegalChars(funcName))
+		# to identify the real function name when needed
+		realAndSanitizedFunctionNameMapping[funcName] = sanitizedFuncName
 
 		try:
 			IDAConsolePrint(f"[{functionCounter}] Decompiling --> {funcName} ({functionsPath}) \n")
-			pseudoCodeOBJ: ida_pro.strvec_t = decompileFunction(func)
-			
-			dumpPseudocodeToFile(pseudoCodeOBJ, funcName)
 
+			pseudoCodeOBJ: ida_pro.strvec_t = decompileFunction(func)
+			pseudoCodeString = pseudoCodeObjToString(pseudoCodeOBJ)
+
+
+			dumpPseudocodeToRespectiveFile(pseudoCodeString, funcName)
 			functionCounter += 1
+			del pseudoCodeOBJ
 
 		except Exception as e:
 			exceptionLogger(e)
 			functionCounter -= 1			
 
-
 	IDAConsolePrint(f"[!] Successfully decompiled %s functions! [!]" % str(functionCounter - 1))
-
+	dumpToFileRealAndSanitizedFunctionNamesMapping(realAndSanitizedFunctionNameMapping)
 
 
 def checkOutputPath() -> None:
@@ -68,6 +72,7 @@ def checkOutputPath() -> None:
 		shutil.rmtree(outputPath)
 		os.mkdir(outputPath)
 		os.mkdir(functionsPath)
+
 
 def initHexraysPlugin() -> None:
 	if not ida_hexrays.init_hexrays_plugin():
@@ -93,8 +98,6 @@ def parseIlegalChars(stringToParse: str) -> str:
 
 def decompileFunction(func: int) -> ida_pro.strvec_t:
 	try:
-		funcName: str = idc.get_func_name(func)
-
 		decompiledFunc: ida_hexrays.cfuncptr_t = ida_hexrays.decompile(func);
 		pseudoCodeOBJ: ida_pro.strvec_t = decompiledFunc.get_pseudocode()
 
@@ -104,23 +107,32 @@ def decompileFunction(func: int) -> ida_pro.strvec_t:
 		raise e
 	
 
-def dumpPseudocodeToFile(pseudoCodeOBJ: ida_pro.strvec_t, funcName: str) -> None:
+def pseudoCodeObjToString(pseudoCodeOBJ: ida_pro.strvec_t) -> str:
+	convertedObj: str = ""
+
+	for lineOBJ in pseudoCodeOBJ:
+		convertedObj += (ida_lines.tag_remove(lineOBJ.line) + "\n")
+
+	return convertedObj
+
+
+def dumpPseudocodeToRespectiveFile(pseudoCode: str, filename: str) -> None:
 	global functionsPath
-	sanitizedFuncName: str = parseIlegalChars(funcName)
+	sanitizedFilename: str = parseIlegalChars(filename)
 
-	with open(os.path.join(functionsPath, sanitizedFuncName), "a") as f:
-		f.write(f"// {funcName} \n \n")
-		for lineOBJ in pseudoCodeOBJ:
-			f.write(ida_lines.tag_remove(lineOBJ.line) + "\n")
+	with open(os.path.join(functionsPath, sanitizedFilename), "a") as f:
+		f.write(pseudoCode)
+		
 
 
-def mapFunctionNameWithParsedName(realFuncName: str, sanitizedFuncName: str) -> None:
+def dumpToFileRealAndSanitizedFunctionNamesMapping(mapping: dict) -> None:
+
 	try:
 		with open(os.path.join(outputPath, "1 - nameMap.txt"), "a") as f:
-			f.write(f"{realFuncName} : {sanitizedFuncName} \n")
+			for key in mapping:
+				f.write(f"{key} : {mapping[key]} \n")
 	except Exception as e:
 		exceptionLogger(e)
-
 
 
 def exceptionLogger(exception: str) -> None:
@@ -128,6 +140,7 @@ def exceptionLogger(exception: str) -> None:
 	with open(os.path.join(outputPath, "0 - ERROR_LOG.txt"), "a") as f:
 		f.write(f"[EXCEPTION]:'%s' \n" % str(exception))
 		f.write(f"[Exception info]: %s \n \n" % str(sys.exc_info()))
+
 
 def errorLogger(message: str) -> None:
 	IDAConsolePrint(message)
