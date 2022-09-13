@@ -21,11 +21,11 @@ An IDAPython script to decompile all the functions of a binary and dump the pseu
 
 `functionDecompiler.py` hashes
 
->MD5 --> `ed922283e746baacd5c7f3de8d2c91fc`
+>MD5 --> `e4dcf2dee23bb7d39172441b93e88925`
 
->Sha1 --> `10d50c80139f71cde480b4c550914d1b82c16906`
+>Sha1 --> `5cf1f74791581dbe10e13d848bf80ea9041c7740 `
 
->Sha256 --> `6cbe37b0b870f867fe022cf4d76b398b23dd0bc10a467c4c8e3a4fcc1e3a9049`
+>Sha256 --> `537683666fa696b4b34bfaed910ce8a913f15e0b96c8d49ea523e848b4c16b28 `
 
 ## Setup
 
